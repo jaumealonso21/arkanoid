@@ -1,7 +1,9 @@
 var w, h, ctx, canvas;
 var pala, bloque, pilota;
-var id, i, j;
-var linBlock, levelBlock, colors;
+var id, i, j, z, y;
+var linBlock, levelBlock, colors, ent;
+var rowBlock = [[10], [10], [10]]; // Array bidim amb colors dels blocks predefinits
+var pos = [[10], [10], [10]]; // Array bidim amb pos. existència dels blocks
 
 window.onload=Game();
 
@@ -10,8 +12,11 @@ function Game() {
     w = canvas.width;
     h = canvas.height;
     pala = {x:(w/2)-14, y:h-8, amp:28, alc:2, score:0};
-    pilota={x:50, y:25, dx:1, dy:1, mida:2, color:"red"};
-    block = {x:0, y:5, amp:64, alc:10, display: true};//Primer block
+    pilota={x:50, y:75, dx:1, dy:1, mida:2, color:"red"};
+    block = {x:0, y:5, amp:30, alc:10};//Primer block
+    linBlock = 10; //Blocks per línia
+    levelBlock = 2; //Nivells de blocks--El 0 compta
+    colorsBlock(rowBlock); //Fixació dels colors, evita efecte psicodèlic
     
     ctx = canvas.getContext("2d");
     ctx.font = '12pt Calibri';
@@ -21,20 +26,33 @@ function Game() {
     document.addEventListener("keydown", escoltar, false);
     //id = window.requestAnimationFrame(actualitza);   
 }
+function colorsBlock(rowBlock) { 
+    colors = ["#ff0000", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
+        "green", "violet", "cyan", "orange"];// 5 colors diferents
+    y = 0; z = 0;
+    for (y; y <= levelBlock; y++) {
+        for (z; z <= linBlock; z++) {
+            rowBlock[y][z] = colors[Math.floor(Math.random()*9)];//Color al.leatori(10)
+            pos[y][z] = true; //Todos blocks existen al principio (opcional)
+            //Més endavant fer-los random, pot ser??
+        }
+        z = 0; // Inici del comptador
+    }
+    y = 0; // Inici del comptador
+}
 function pintarBlocks(block) {
     //width/height canvas: 512px
     //marge dre/esq: 6 px; total w para blocks 500px -- Millor no marges
-    //total blocks 512/64 = 10 blocks
+    //total blocks 512/64 = 10 blockscol
     // 3 línies de blocks, per exemple
-    linBlock = 10; //Blocks per línia
-    levelBlock = 2; //Nivells de blocks--El 0 compta
-    colors = ["#ff0000", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa"];// 5 colors diferents
     i = 0, j = 0;
     for(j; j <= levelBlock; j++) {
-        for(i; i <= linBlock; i++) { //Fa una línia de Blocks
-            ctx.fillStyle = colors[Math.floor(Math.random()*5)];//Color al.leatori
-            ctx.fillRect(block.x, block.y, block.amp, block.alc);
-            block.x += 64;
+        for(i; i <= linBlock; i++) { //Fa una línia de Blocks 
+            if(pos[j][i] === true) {
+                ctx.fillStyle = rowBlock[j][i]; // Agafa dels colors predefinits
+                ctx.fillRect(block.x, block.y, block.amp, block.alc);
+            }
+            block.x += block.amp;//Desplaçament a la pròxima posició
         }
         block.x = 0; //Tornar a posició horitzontal inicial
         i = 0; // Comptador a punt d'inici
@@ -45,7 +63,7 @@ function pintarBlocks(block) {
     ctx.fillStyle = "white"; // Evita que canviï el color de tots els elements del joc
 }
 
-function pintarPista(){
+function pintarPista(){ // No actiu
     ctx.clearRect(0, 0, w, h);
     ctx.fillRect(w/2, 0, 2, h); //-- Línia central
 }
@@ -73,22 +91,46 @@ function actualitzaPilota(pilota){
         pilota.dy = -pilota.dy;
         //pilota.dx = -pilota.dx;
     }
-    
-    if (pilota.y <= 0) { //Rebot al top del canvas
+    ////Rebot al top del canvas
+    if (pilota.y <= 0) { 
         pilota.dy = -pilota.dy;
         //Marca punt
         pala.score++;
     }
-    if (pilota.y >= h) { //Rebot al bottom del canvas
+    //Rebot al bottom del canvas
+    if (pilota.y >= h) { 
         pilota.dy = -pilota.dy;
-        //Perd vida
-        
+        //Perd vida   
     }
-    
-    if (pilota.x >= w || pilota.x <= 0) { //Rebot parets laterals
+    //Rebot parets laterals
+    if (pilota.x >= w || pilota.x <= 0) { 
         pilota.dx = -pilota.dx;   
-    } 
+    }
+    //Rebot Block
+       
+//    if (pilota.y <= 40 && pilota.y <= 30) { // Arribes a 3ºnivell
+//        var t = 1;
+//        for(t;t===linBlock;t++){
+//            //ent = Math.floor(w/linBlock); //En quina pos.horitz. es troba la pilota
+//            ent = w/(t*block.amp);
+//            if(pilota.x>=w/t*block.amp && pilota.x<=w/(t+1)*block.amp){
+//                if(pos[2][t] === true) {
+//                    esborraBlock(2, t);
+//                    pilota.dy = -pilota.dy;
+//                }  
+//            }   
+//        }   
+//    } else if(pilota.y <= 30 && pilota.y <= 20){ //Arribes a 2ºnivell
+//        //pos[1][]
+//    } else if(pilota.y <= 20 && pilota.y <= 10){ //Arribes 1ºnivell
+//        //pos[0][]
+//    }
+         
     pintarPilota(pilota);	
+}
+function esborraBlock(y, z) {
+    pos[y][z] = false; //Tocat per la pilota
+    //Alternatiu per fer un 'score' més endavant
 }
 function actualitzaMarcador(){
 	ctx.fillText(pala.score, (w/2), 80);	
