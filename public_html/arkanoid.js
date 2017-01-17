@@ -107,24 +107,26 @@ function actualitzaPilota(pilota){
         pilota.dx = -pilota.dx;   
     }
     //Rebot Block
-       
-//    if (pilota.y <= 40 && pilota.y <= 30) { // Arribes a 3ºnivell
-//        var t = 1;
-//        for(t;t===linBlock;t++){
-//            //ent = Math.floor(w/linBlock); //En quina pos.horitz. es troba la pilota
-//            ent = w/(t*block.amp);
-//            if(pilota.x>=w/t*block.amp && pilota.x<=w/(t+1)*block.amp){
-//                if(pos[2][t] === true) {
-//                    esborraBlock(2, t);
-//                    pilota.dy = -pilota.dy;
-//                }  
-//            }   
-//        }   
-//    } else if(pilota.y <= 30 && pilota.y <= 20){ //Arribes a 2ºnivell
-//        //pos[1][]
-//    } else if(pilota.y <= 20 && pilota.y <= 10){ //Arribes 1ºnivell
-//        //pos[0][]
-//    }
+    //if (pilota.y <= 40 && pilota.y <= 30) {
+        if(pilota.y === 35 || pilota.y === 25) {
+    //if (pilota.y <= (block.alc*3+block.y) && pilota.y >= (block.alc*2+block.y)) { // Arribes a 3ºnivell
+        ent = w/linBlock; //Divisions senceres de la línia de blocks
+        var t = 0;
+        for(t;t<=linBlock;t++){
+            if(pilota.x>=ent*t && pilota.x<=(ent*t+ent)){                      
+                if(pos[2][t] === true) {
+                    console.log(t);
+                    
+                    esborraBlock(2, t);
+                    pilota.dy = -pilota.dy;
+                }  
+            }   
+        }   
+    } else if(pilota.y <= 25 && pilota.y <= 15){ //Arribes a 2ºnivell
+        //pos[1][]
+    } else if(pilota.y <= 15 && pilota.y <= 5){ //Arribes 1ºnivell
+        //pos[0][]
+    }
          
     pintarPilota(pilota);	
 }
