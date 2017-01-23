@@ -24,7 +24,7 @@ function Game() {
     
     actualitza();
     document.addEventListener("keydown", escoltar, false);
-    //id = window.requestAnimationFrame(actualitza);   
+    id = window.requestAnimationFrame(actualitza);   
 }
 function colorsBlock(rowBlock) { 
     colors = ["#ff0000", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
