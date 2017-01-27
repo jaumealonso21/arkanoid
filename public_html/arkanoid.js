@@ -14,7 +14,7 @@ function Game() {
     w = canvas.width;
     h = canvas.height;
     pala = {x:(w/2)-14, y:h-8, amp:28, alc:2, score:0, vides:3};
-    pilota={x:50, y:75, dx:1, dy:1, mida:2, color:"red"};
+    pilota = {x:50, y:75, dx:1, dy:1, mida:2, color:"red"};
     block = {x:0, y:5, amp:30, alc:10};//Primer block
     linBlock = 10; //Blocks per línia
     levelBlock = 2; //Nivells de blocks--El 0 compta
