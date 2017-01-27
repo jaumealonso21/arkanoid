@@ -1,3 +1,4 @@
+
 var w, h, ctx, canvas;
 var pala, bloque, pilota;
 var id, i, j, z, y;
@@ -5,6 +6,7 @@ var linBlock, levelBlock, colors, ent;
 var rowBlock = [[10], [10], [10]]; // Array bidim amb colors dels blocks predefinits
 var pos = [[10], [10], [10]]; // Array bidim amb pos. existència dels blocks
 var reinicio;//Funció que permet recarregar la pàgina
+
 window.onload=Game();
 
 function Game() {
@@ -99,43 +101,43 @@ function actualitzaPilota(pilota){
         //Marca punt
         pala.score++;
     }
-    //Rebot al bottom del canvas------------------------------------------------
-//    if (pilota.y >= h) { 
-//        pilota.dy = -pilota.dy;
-//        //Perd vida
-//        pala.vides--;
-//        alert("Et queda "+pala.vides+" vides.");
+    //Rebot al bottom del canvas
+    if (pilota.y >= h) { 
+        pilota.dy = -pilota.dy;
+        //Perd vida
+        pala.vides--;
+        //alert("Et queda "+pala.vides+" vides.");---------------
 //        if(pala.vides < 1){
 //            //cancelAnimationFrame(id);
 //            alert("Fi de la partida");
 //            //var reinicio = window.document.location.href;
 //            reinicio();
 //        }
-//    }
+    }
     //Rebot parets laterals
     if (pilota.x >= w || pilota.x <= 0) { 
         pilota.dx = -pilota.dx;   
     }
     //Rebot Block -------------------------------------------------------------------
-    var l = levelBlock + 1;//Evita el '0'
-    for(l;l>=0;l--){//Crearà els blocks d'adalt a abaix------------------------------------------------------------
-        if (pilota.y <= ((block.alc*l)+block.y) && pilota.y >= (block.alc*(l-1))+block.y) {
-            esborraBlock(levelBlock);
-        }
+//    var l = levelBlock + 1;//Evita el '0'
+//    for(l;l>=0;l--){//Crearà els blocks d'adalt a abaix------------------------------------------------------------
+//        if (pilota.y <= ((block.alc*l)+block.y) && pilota.y >= (block.alc*(l-1))+block.y) {
+//            esborraBlock(levelBlock);
+//        }
+//    }
+    //if (pilota.y <= ((block.alc*(levelBlock+1))+block.y) && pilota.y >= (block.alc*levelBlock)+block.y) {//3º Nivell
+    if(pilota.y === 35 || pilota.y === 25) { // Distància fixada
+        
+       esborraBlock(levelBlock);//Els nivells comencen per 0
     }
-//    if (pilota.y <= ((block.alc*(levelBlock+1))+block.y) && pilota.y >= (block.alc*levelBlock)+block.y) {//3º Nivell
-//    //if(pilota.y === 35 || pilota.y === 25) { // Distància fixada
-//       esborraBlock(levelBlock);//Els nivells comencen per 0
-//    }
-//    if(pilota.y <= ((block.alc*levelBlock)+block.y) && pilota.y >= (block.alc*(levelBlock)-1)+block.y) {//2º Nivell
-//    //} else if(pilota.y === 25 || pilota.y === 15) {//Arribes a 2ºnivell
-//        esborraBlock(levelBlock-1);
-//    }
-//    if(pilota.y <= ((block.alc*(levelBlock)-1)+block.y) && pilota.y >= (block.alc*(levelBlock)-2)+block.y) {//1º Nivell
-//    //} else if(pilota.y === 15 || pilota.y === 5) {//Arribes 1ºnivell
-//        esborraBlock(levelBlock-2);
-//    }
-    
+    //if(pilota.y <= ((block.alc*levelBlock)+block.y) && pilota.y >= (block.alc*(levelBlock)-1)+block.y) {//2º Nivell
+    if(pilota.y === 25 || pilota.y === 15) {//Arribes a 2ºnivell
+        esborraBlock(levelBlock-1);
+    }
+    //if(pilota.y <= ((block.alc*(levelBlock)-1)+block.y) && pilota.y >= (block.alc*(levelBlock)-2)+block.y) {//1º Nivell
+    if(pilota.y === 15 || pilota.y === 5) {//Arribes 1ºnivell
+        esborraBlock(levelBlock-2);
+    }
     
     pintarPilota(pilota);	
 }
@@ -145,12 +147,28 @@ function esborraBlock(level) {
     var t = 0;
     for(t;t<=linBlock;t++){ //Tants com blocks horitzontals hi hagin 
         if(pilota.x>=ent*t && pilota.x<=(ent*t+ent)){//Passa per cada block horitzontal                 
-            if(pos[level][t] === true) {//El block existeix
-                pos[level][t] = false; //Tocat per la pilota, esborrat
-                pilota.dy = -pilota.dy;//Canvi de direcció
-            }  
-        }   
+//            if(pos[level][t] === true) {//El block existeix
+//                pilota.dy = -pilota.dy;//Canvi de direcció
+//                pos[level][t] = false; //Tocat per la pilota, esborrat       
+//            }
+            //var id2 = t; 
+            actualitzaBlock(level, t);
+        }else if(pilota.x>=(ent*t-ent) && pilota.x<=ent*t){//Block lateral esquerra
+            //var id2 = t--;
+            actualitzaBlock(level, t-1);
+            //console.log("esq");
+        }else if(pilota.x>=(ent*t+ent) && pilota.x<=(ent*t+ent*2)){//Block lateral dret
+            //var id2 = t++;
+            actualitzaBlock(level, t+1);
+            //console.log("dret");
+        }
     }
+}
+function actualitzaBlock(level, t){//True-block existeix, False-block no existeix
+    if(pos[level][t] === true) {//El block existeix
+        pilota.dy = -pilota.dy;//Canvi de direcció
+        pos[level][t] = false; //Tocat per la pilota, esborrat       
+    } 
 }
 function actualitzaMarcador(){
 	ctx.fillText(pala.score, (w/2), 80);	
@@ -170,8 +188,7 @@ function escoltar(e){
 	
 	if(e.keyCode === 37){ //fletxa esquerra
 		pala.x += -10;
-	}
-	else if(e.keyCode === 39){ //fletxa dreta
+	} else if(e.keyCode === 39){ //fletxa dreta
 		pala.x += +10;
 	}
 
