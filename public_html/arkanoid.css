@@ -4,3 +4,9 @@
     height: 512px;
     margin: 0 25%;
 }
+#puntuaciones {
+    display: inline-block;
+    float: left;
+    margin: 15px;
+    background-color: background;
+}

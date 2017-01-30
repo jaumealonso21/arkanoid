@@ -2,9 +2,10 @@
 var w, h, ctx, canvas;
 var pala, bloque, pilota;
 var id, i, j, z, y;
-var linBlock, levelBlock, colors, ent;
+var linBlock, levelBlock, ent, colors, marcador, punts;
 var rowBlock = [[10], [10], [10]]; // Array bidim amb colors dels blocks predefinits
 var pos = [[10], [10], [10]]; // Array bidim amb pos. existència dels blocks
+var points = [[10], [10], [10]];// Array bidim amb puntuacions
 var reinicio;//Funció que permet recarregar la pàgina
 
 window.onload=Game();
@@ -15,11 +16,14 @@ function Game() {
     h = canvas.height;
     pala = {x:(w/2)-14, y:h-8, amp:28, alc:2, score:0, vides:3};
     pilota = {x:w/2, y:45, dx:dirMov(), dy:0.5, mida:2, color:"red"};
-    block = {x:0, y:5, amp:30, alc:10};//Primer block
+    block = {x:0, y:5, amp:30, alc:10, point: 5};//Primer block
     linBlock = 10; //Blocks per línia
     levelBlock = 2; //Nivells de blocks--El 0 compta
+    colors = ["#ff0000", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
+        "green", "violet", "cyan", "orange"];// 10 colors diferents
     colorsBlock(rowBlock); //Fixació dels colors, evita efecte psicodèlic
     reinicio = function(){ window.location.reload(true); };
+    marcador = 0;//Cada cop que es destrueix un bloc
     
     ctx = canvas.getContext("2d");
     ctx.font = '12pt Calibri';
@@ -41,11 +45,49 @@ function colorsBlock(rowBlock) {
         for (z; z <= linBlock; z++) {
             rowBlock[y][z] = colors[Math.floor(Math.random()*9)];//Color al.leatori(10)
             pos[y][z] = true; //Todos blocks existen al principio (opcional)
+            points[y][z] = puntuacions(rowBlock[y][z]);//Assignació de punts depenent el color
             //Més endavant fer-los random
         }
         z = 0; // Inici del comptador
     }
     y = 0; // Inici del comptador
+}
+function puntuacions(p){ //Puntuacions per colors
+    switch (p){
+        case colors[0]: 
+            punts = 1;
+            break;
+        case colors[1]:
+            punts = 2;
+            break;
+        case colors[2]:
+            punts = 3;
+            break;
+        case colors[3]:
+            punts = 4;
+            break;
+        case colors[4]:
+            punts = 5;
+            break;
+        case colors[5]:
+            punts = 6;
+            break;
+        case colors[6]:
+            punts = 7;
+            break;
+        case colors[7]:
+            punts = 8;
+            break;
+        case colors[8]:
+            punts = 9;
+            break;
+        case colors[9]:
+            punts = 10;
+            break;
+        default:
+            break;
+    }
+    return punts;
 }
 function pintarBlocks(block) {
     //width/height canvas: 512px
@@ -144,13 +186,15 @@ function esborraBlock(level) {
 function actualitzaBlock(level, t){//True-block existeix, False-block no existeix
     if(pos[level][t] === true) {//El block existeix
         pilota.dy = -pilota.dy;//Canvi de direcció
-        pos[level][t] = false; //Tocat per la pilota, esborrat       
+        pos[level][t] = false; //Tocat per la pilota, esborrat
+        marcador += points[level][t];
     } 
 }
 function actualitzaMarcador(){
     ctx.save();
     ctx.textAlign = "center";
-    ctx.fillText(pala.score, w/2, 80);
+    //ctx.fillText(pala.score, w/2, 80);
+    ctx.fillText(marcador, w/2, 80);
     ctx.restore();
 }
 function actualitzaVides(){
@@ -195,3 +239,10 @@ function escoltar(e){
 	}
 }
 
+function puntuaciones(){
+    var puntua = document.getElementById('puntuaciones');
+    for(var x in colors){
+        puntua.innerHTML = "<span>Color: "+colors[x]+" " + punts +"</span><br />\n";
+    }
+}
+puntuaciones();
