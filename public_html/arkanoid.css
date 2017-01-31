@@ -10,3 +10,8 @@
     float: left;
     margin: 15px;
 }
+table {
+    font-family: "Verdana";
+    font-style: italic;
+    font-size: 0.75em;
+}

@@ -21,7 +21,7 @@ function Game() {
     levelBlock = 2; //Nivells de blocks--El 0 compta
     colors = ["yellow", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
         "green", "violet", "cyan", "orange"];// 10 colors diferents
-    punts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];//Puntuaciones amb els colors
+    punts = [15, 20, 35, 18, 52, 63, 98, 34, 12, 1];//Puntuaciones amb els colors
     //Més endavant arreglar amb objecte mapa que contingui posicions, exist., colors i puntuacions-------------
     colorsBlock(rowBlock); //Fixació dels colors, evita efecte psicodèlic
     reinicio = function(){ window.location.reload(true); };
@@ -47,13 +47,12 @@ function colorsBlock(rowBlock) {
             rowBlock[y][z] = colors[Math.floor(Math.random()*9)];//Color al.leatori(10)
             pos[y][z] = true; //Todos blocks existen al principio (opcional)
             points[y][z] = puntuacions(rowBlock[y][z]);//Assignació de punts depenent el color
-            //Més endavant fer-los random
         }
         z = 0; // Inici del comptador
     }
     y = 0; // Inici del comptador
 }
-function puntuacions(p){ //Puntuacions per colors
+function puntuacions(p){ //Puntuacions per colors, millorable 
     var sort;
     switch (p){
         case colors[0]: 
@@ -109,7 +108,6 @@ function pintarBlocks(block) {
         block.x = 0; //Tornar a posició horitzontal inicial
         i = 0; // Comptador a punt d'inici
         block.y += block.alc; //Desplaça una línia equiv. a l'alçada del block
-        //console.log(j);
     }  
     block.x = 0; block.y = 5; //Posicions inicials del primer block
     ctx.fillStyle = "white"; // Evita que canviï el color de tots els elements del joc(en general)
@@ -117,7 +115,7 @@ function pintarBlocks(block) {
 function pintarPala(pala) {
     ctx.fillRect(pala.x, pala.y, pala.amp, pala.alc);
 }
-function pintarPilota(p){
+function pintarPilota(p){ //Pinta la pilota
     ctx.save();
     ctx.fillStyle = p.color;
     ctx.beginPath();
@@ -196,11 +194,10 @@ function actualitzaBlock(level, t){//True-block existeix, False-block no existei
 function actualitzaMarcador(){
     ctx.save();
     ctx.textAlign = "center";
-    //ctx.fillText(pala.score, w/2, 80);
     ctx.fillText(marcador, w/2, 80);
     ctx.restore();
 }
-function actualitzaVides(){
+function actualitzaVides(){ //Marcador de vides
     ctx.save(); 
     if(pala.vides < 0){
         document.addEventListener("keydown", reinici, false);//Barra espai
@@ -242,7 +239,7 @@ function escoltar(e){
 	}
 }
 
-function puntuaciones(){
+function puntuaciones() { //Millorable
     var puntua = document.getElementById("puntuaciones");
     var tabla = document.createElement("table");
     puntua.appendChild(tabla);
