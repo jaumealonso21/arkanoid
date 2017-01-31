@@ -19,8 +19,10 @@ function Game() {
     block = {x:0, y:5, amp:30, alc:10, point: 5};//Primer block
     linBlock = 10; //Blocks per línia
     levelBlock = 2; //Nivells de blocks--El 0 compta
-    colors = ["#ff0000", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
+    colors = ["yellow", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
         "green", "violet", "cyan", "orange"];// 10 colors diferents
+    punts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];//Puntuaciones amb els colors
+    //Més endavant arreglar amb objecte mapa que contingui posicions, exist., colors i puntuacions-------------
     colorsBlock(rowBlock); //Fixació dels colors, evita efecte psicodèlic
     reinicio = function(){ window.location.reload(true); };
     marcador = 0;//Cada cop que es destrueix un bloc
@@ -30,6 +32,7 @@ function Game() {
     ctx.fillStyle = "white";//Color general
     
     actualitza();
+    puntuaciones();//Crea la tabla de puntuacions a l'esquerra del canvas
     document.addEventListener("keydown", escoltar, false);//Mov pales
     id = window.requestAnimationFrame(actualitza);   
 }
@@ -37,9 +40,7 @@ function dirMov(){
     var dir = [0.5, -0.5];//Escalable i sempre cap abaix
     return dir[Math.floor(Math.random()*2)];//Al.leatori dreta o esq
 }
-function colorsBlock(rowBlock) { 
-    colors = ["#ff0000", "#00ff80", "#8000ff", "#4d88ff", "#80ffaa", "red", 
-        "green", "violet", "cyan", "orange"];// 10 colors diferents
+function colorsBlock(rowBlock) {
     y = 0; z = 0;
     for (y; y <= levelBlock; y++) {
         for (z; z <= linBlock; z++) {
@@ -53,41 +54,43 @@ function colorsBlock(rowBlock) {
     y = 0; // Inici del comptador
 }
 function puntuacions(p){ //Puntuacions per colors
+    var sort;
     switch (p){
         case colors[0]: 
-            punts = 1;
+            sort =  punts[0];
             break;
         case colors[1]:
-            punts = 2;
+            sort = punts[1];
             break;
         case colors[2]:
-            punts = 3;
+            sort = punts[2];
             break;
         case colors[3]:
-            punts = 4;
+            sort = punts[3];
             break;
         case colors[4]:
-            punts = 5;
+            sort = punts[4];
             break;
         case colors[5]:
-            punts = 6;
+            sort = punts[5];
             break;
         case colors[6]:
-            punts = 7;
+            sort = punts[6];
             break;
         case colors[7]:
-            punts = 8;
+            sort = punts[7];
             break;
         case colors[8]:
-            punts = 9;
+            sort = punts[8];
             break;
         case colors[9]:
-            punts = 10;
+            sort = punts[9];
             break;
         default:
+            sort = 0;
             break;
     }
-    return punts;
+    return sort;
 }
 function pintarBlocks(block) {
     //width/height canvas: 512px
@@ -240,9 +243,10 @@ function escoltar(e){
 }
 
 function puntuaciones(){
-    var puntua = document.getElementById('puntuaciones');
-    for(var x in colors){
-        puntua.innerHTML = "<span>Color: "+colors[x]+" " + punts +"</span><br />\n";
+    var puntua = document.getElementById("puntuaciones");
+    var tabla = document.createElement("table");
+    puntua.appendChild(tabla);
+    for(var x in colors){ 
+        tabla.innerHTML += "<tr><td>Color: <span style='background-color: " + colors[x] + ";'>" + colors[x] + "</span></td><td> Puntuació: " + punts[x] + "</td></tr>\n";
     }
 }
-puntuaciones();

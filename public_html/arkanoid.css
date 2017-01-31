@@ -6,7 +6,7 @@
 }
 #puntuaciones {
     display: inline-block;
+    position: absolute;
     float: left;
     margin: 15px;
-    background-color: background;
 }
